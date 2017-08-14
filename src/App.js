@@ -28,9 +28,9 @@ class App extends Component {
         // firebase.handleLoggedIn(result.user);
         localStorage.setItem("token", result.credential.accessToken);
         localStorage.setItem("username", result.user.displayName);
-        localStorage.setItem("uid", result.user.uid);
         this.setState({
           loggedIn: true,
+          username: result.user.displayName,
           avatarUrl: result.user.photoURL
         });
       })
@@ -62,11 +62,11 @@ class App extends Component {
           { this.state.loggedIn ? <Avatar className="App-logo" src={this.state.avatarUrl} /> :
             <img src={logo} className="App-logo" alt="logo" />
           }
-          <h2>Scorekort</h2>
+          <h2>Scorekort {this.state.loggedIn ? ` för ${this.state.username}` : ""}</h2>
         </div>
         <RaisedButton
           onClick={Firebase.signInWithGoogle}
-          label="Sign in with Google"
+          label="Logga in med Google"
           secondary={true}
           icon={<FontIcon className="fa fa-google" />}
         />
