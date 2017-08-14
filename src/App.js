@@ -1,28 +1,78 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './img/discgolf.png';
+import Firebase from './Firebase/Firebase';
+
 import './App.css';
 
-import Input from 'react-toolbox/lib/input';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import Avatar from 'material-ui/Avatar';
 
 class App extends Component {
 
-  handleNameChange = name => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      loggedIn: false,
+      avatarUrl: null
+    };
+  }
+
+  componentDidMount() {
+    const loggingIn = localStorage.getItem("loggingIn");
+    if (loggingIn) {
+      Firebase.getRedirectResult().then((result) => {
+        localStorage.removeItem("loggingIn");
+        // firebase.handleLoggedIn(result.user);
+        localStorage.setItem("token", result.credential.accessToken);
+        localStorage.setItem("username", result.user.displayName);
+        localStorage.setItem("uid", result.user.uid);
+        this.setState({
+          loggedIn: true,
+          avatarUrl: result.user.photoURL
+        });
+      })
+      .catch((error) => {
+        // this.setState({loading: false});
+        console.log(error);
+      });
+    } else {
+      // this.setState({loading: false});
+    }
+  }
+
+  handleNameChange = (e, name) => {
     console.log(name);
+    this.setState({
+      name
+    });
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    console.log(`Saving course: ${this.state.name}`);
   }
 
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          { this.state.loggedIn ? <Avatar className="App-logo" src={this.state.avatarUrl} /> :
+            <img src={logo} className="App-logo" alt="logo" />
+          }
+          <h2>Scorekort</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <Input type="text" label="Banans namn" name="name" value={this.state.name} onChange={() => handleNameChange(name)} />
-        </p>
+        <RaisedButton
+          onClick={Firebase.signInWithGoogle}
+          label="Sign in with Google"
+          secondary={true}
+          icon={<FontIcon className="fa fa-google" />}
+        />
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <TextField type="text" floatingLabelText="Banans namn" name="name" onChange={(e, value) => this.handleNameChange(e, value)} />
+        </form>
       </div>
     );
   }
