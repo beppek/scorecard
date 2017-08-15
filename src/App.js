@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import logo from './img/discgolf.png';
 import Firebase from './Firebase/Firebase';
 
@@ -23,21 +23,19 @@ class App extends Component {
   componentDidMount() {
     const loggingIn = localStorage.getItem("loggingIn");
     if (loggingIn) {
-      Firebase.getRedirectResult().then((result) => {
-        localStorage.removeItem("loggingIn");
-        // firebase.handleLoggedIn(result.user);
-        localStorage.setItem("token", result.credential.accessToken);
-        localStorage.setItem("username", result.user.displayName);
-        this.setState({
-          loggedIn: true,
-          username: result.user.displayName,
-          avatarUrl: result.user.photoURL
+      Firebase
+        .getRedirectResult()
+        .then((result) => {
+          localStorage.removeItem("loggingIn");
+          // firebase.handleLoggedIn(result.user);
+          localStorage.setItem("token", result.credential.accessToken);
+          localStorage.setItem("username", result.user.displayName);
+          this.setState({loggedIn: true, username: result.user.displayName, avatarUrl: result.user.photoURL});
+        })
+        .catch((error) => {
+          // this.setState({loading: false});
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        // this.setState({loading: false});
-        console.log(error);
-      });
     } else {
       // this.setState({loading: false});
     }
@@ -45,9 +43,7 @@ class App extends Component {
 
   handleNameChange = (e, name) => {
     console.log(name);
-    this.setState({
-      name
-    });
+    this.setState({name});
   }
 
   handleSubmit = e => {
@@ -55,23 +51,49 @@ class App extends Component {
     console.log(`Saving course: ${this.state.name}`);
   }
 
+  handleSignOut = () => {
+    this.setState({
+      loggedIn: false,
+      name: '',
+      avatarUrl: null
+    });
+    Firebase.signout();
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          { this.state.loggedIn ? <Avatar className="App-logo" src={this.state.avatarUrl} /> :
-            <img src={logo} className="App-logo" alt="logo" />
-          }
-          <h2>Scorekort {this.state.loggedIn ? ` för ${this.state.username}` : ""}</h2>
+          {this.state.loggedIn
+            ? <Avatar className="App-logo" src={this.state.avatarUrl}/>
+            : <img src={logo} className="App-logo" alt="logo"/>
+}
+          <h2>Scorekort {this.state.loggedIn
+              ? ` för ${this.state.username}`
+              : ""}</h2>
         </div>
-        <RaisedButton
-          onClick={Firebase.signInWithGoogle}
-          label="Logga in med Google"
-          secondary={true}
-          icon={<FontIcon className="fa fa-google" />}
-        />
+        {this.state.loggedIn ? 
+          <RaisedButton
+            onClick={this.handleSignOut}
+            label="Logga ut"
+            secondary={true}
+            icon={<FontIcon className="fa fa-sign-out"/>}
+          />
+        : 
+          <RaisedButton
+            onClick={Firebase.signInWithGoogle}
+            label="Logga in med Google"
+            secondary={true}
+            icon={< FontIcon className = "fa fa-google" />}
+          />
+        
+        }
         <form onSubmit={(e) => this.handleSubmit(e)}>
-          <TextField type="text" floatingLabelText="Banans namn" name="name" onChange={(e, value) => this.handleNameChange(e, value)} />
+          <TextField
+            type="text"
+            floatingLabelText="Banans namn"
+            name="name"
+            onChange={(e, value) => this.handleNameChange(e, value)}/>
         </form>
       </div>
     );

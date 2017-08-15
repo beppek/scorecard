@@ -9,22 +9,43 @@ class Firebase {
 
   signInWithGoogle() {
     localStorage.setItem("loggingIn", true);
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase
+      .auth
+      .GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-    firebase.auth().signInWithRedirect(provider);
+    firebase
+      .auth()
+      .signInWithRedirect(provider);
+  }
+
+  signout() {
+    return new Promise((resolve, reject) => {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 
   getRedirectResult() {
     return new Promise((resolve, reject) => {
-      firebase.auth().getRedirectResult().then((result) => {
-        if (!result.user) {
-          reject("no user");
-        }
-        resolve(result);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then((result) => {
+          if (!result.user) {
+            reject("no user");
+          }
+          resolve(result);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   }
 
