@@ -5,6 +5,13 @@ import update from 'immutability-helper';
 
 import './App.css';
 
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -105,6 +112,22 @@ class App extends Component {
     this.handleNameChange("");
   }
 
+  openLoginMenu = (event) => {
+    // This prevents ghost click.
+    event.preventDefault();
+
+    this.setState({
+      open: true,
+      anchorEl: event.currentTarget,
+    });
+  };
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
   render() {
     let listItems = [];
     const results = this.state.results.length > 0
@@ -126,55 +149,68 @@ class App extends Component {
     });
     return (
       <div className="App">
-        <div className="App-header">
-          {this.state.loggedIn
-            ? <Avatar className="App-logo" src={this.state.avatarUrl}/>
-            : <img src={logo} className="App-logo" alt="logo"/>
-}
-          <h2>Scorekort {this.state.loggedIn
-              ? ` för ${this.state.username}`
-              : ""}</h2>
-        </div>
-        {this.state.loggedIn
-          ? <RaisedButton
+        <AppBar
+          title="Scorekort"
+          iconElementLeft={this.state.loggedIn
+          ? <Avatar className="App-logo" src={this.state.avatarUrl} /> 
+          : <img src={logo} className="App-logo" alt="logo" /> }
+          iconElementRight={this.state.loggedIn
+          ? <FlatButton
               onClick={this.handleSignOut}
               label="Logga ut"
               secondary={true}
               icon={< FontIcon className = "fa fa-sign-out" />}/>
-          : <RaisedButton
-            onClick={Firebase.signInWithGoogle}
-            label="Logga in med Google"
-            secondary={true}
-            icon={< FontIcon className = "fa fa-google" />}/>
+          : <FlatButton
+                onClick={this.openLoginMenu}
+                label="Logga in"
+                secondary={true}
+                icon={< FontIcon className = "fa fa-sign-in" />}/>
 }
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <TextField
-            value={this.state.value
-            ? this.state.value
-            : ""}
-            type="text"
-            floatingLabelText="Vilken bana ska du spela på?"
-            name="name"
-            onChange={(e, value) => this.handleNameChange(value)}/>
-          <FontIcon
-            onClick={this.clearInput}
+        />
+        <Popover
+          open={this.state.open}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          onRequestClose={this.handleRequestClose}
+        >
+          <Menu>
+            <MenuItem leftIcon={<FontIcon className="fa fa-google" />} primaryText="Google" onClick={Firebase.signInWithGoogle} />
+            <MenuItem leftIcon={<FontIcon className="fa fa-facebook" />} primaryText="Facebook" />
+            <MenuItem leftIcon={<FontIcon className="fa fa-twitter" />} primaryText="Twitter" />
+            <MenuItem leftIcon={<FontIcon className="fa fa-instagram" />} primaryText="Instagram" />
+          </Menu>
+        </Popover>
+        <div className="content">
+          <form onSubmit={(e) => this.handleSubmit(e)}>
+            <TextField
+              value={this.state.value
+              ? this.state.value
+              : ""}
+              type="text"
+              floatingLabelText="Vilken bana ska du spela på?"
+              name="name"
+              onChange={(e, value) => this.handleNameChange(value)}/>
+            <FontIcon
+              onClick={this.clearInput}
+              style={{
+              color: "#666",
+              cursor: "pointer"
+            }}
+              className="fa fa-times"/>
+          </form>
+          <Paper
             style={{
-            color: "#666",
-            cursor: "pointer"
+            width: 300,
+            margin: "0 auto"
           }}
-            className="fa fa-times"/>
-        </form>
-        <Paper
-          style={{
-          width: 300,
-          margin: "0 auto"
-        }}
-          zDepth={1}>
-          {this.state.results.length > 0 && <List>
-            {listItems}
-          </List>
-}
-        </Paper>
+            zDepth={1}>
+            {this.state.results.length > 0 && <List>
+              {listItems}
+            </List>
+  }
+          </Paper>
+        </div>
       </div>
     );
   }
