@@ -49,8 +49,7 @@ class Firebase {
     });
   }
 
-  getAllCourses() {
-    return new Promise((resolve, reject) => {
+  getAllCourses(callback) {
       const db = firebase.database().ref("courses/");
       db.on("value", (snap) => {
         let data = [];
@@ -60,9 +59,8 @@ class Firebase {
             value: child.val()
           });
         })
-        resolve(data);
+        callback(data);
       });
-    });
   }
 
 }
