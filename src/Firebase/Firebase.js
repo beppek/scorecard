@@ -49,6 +49,22 @@ class Firebase {
     });
   }
 
+  getAllCourses() {
+    return new Promise((resolve, reject) => {
+      const db = firebase.database().ref("courses/");
+      db.on("value", (snap) => {
+        let data = [];
+        snap.forEach(child => {
+          data.push({
+            key: child.key,
+            value: child.val()
+          });
+        })
+        resolve(data);
+      });
+    });
+  }
+
 }
 
 export default new Firebase();
