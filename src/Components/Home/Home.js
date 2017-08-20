@@ -22,7 +22,6 @@ class Home extends Component {
     }
 
     handleNameChange = (name) => {
-        console.log(this.props.courses);
         let results = [];
         let courses = this.props.courses;
         if (name !== "") {
@@ -35,7 +34,6 @@ class Home extends Component {
             results = [];
         }
         this.setState({results, value: name});
-        console.log(courses);
     }
 
     removeFromList = (e, result) => {
