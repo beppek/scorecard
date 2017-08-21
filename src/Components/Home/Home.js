@@ -54,7 +54,6 @@ class Home extends Component {
 
     selectCourse = (e, course) => {
         e.preventDefault();
-        console.log(course);
         this.props.history.push(`/courses/${course.key}`);
     }
 
