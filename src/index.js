@@ -19,6 +19,7 @@ injectTapEventPlugin();
 
 store.dispatch((dispatch) => {
     coursesActions.getAllCourses(dispatch);
+    coursesActions.authState(dispatch);
 });
 
 ReactDOM.render(

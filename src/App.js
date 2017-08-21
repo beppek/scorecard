@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import update from 'immutability-helper';
 import {
-  BrowserRouter as Router,
+  Router,
   Route,
   Link,
   Redirect
 } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
+import history from './history';
 
 import logo from './img/discgolf.png';
 import Firebase from './Firebase/Firebase';
@@ -20,18 +20,20 @@ import Menu from 'material-ui/Menu';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 
 import Home from "./Components/Home/Home";
 import Profile from './Components/Profile/Profile';
 import Course from './Components/Course/Course';
+import CreateRound from './Components/Round/CreateRound';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
-      loading: true
+      open: false
     };
   }
 
@@ -42,22 +44,16 @@ class App extends Component {
         .getRedirectResult()
         .then((result) => {
           localStorage.removeItem("loggingIn");
-          // firebase.handleLoggedIn(result.user);
           localStorage.setItem("token", result.credential.accessToken);
           localStorage.setItem("username", result.user.displayName);
-          this.setState({loggedIn: true, user: result.user});
         })
         .catch((error) => {
-          // this.setState({loading: false});
           console.log(error);
         });
-    } else {
-      // this.setState({loading: false});
     }
   }
 
   handleSignOut = () => {
-    this.setState({loggedIn: false, name: '', avatarUrl: null});
     Firebase.signout();
   }
 
@@ -78,14 +74,15 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <div className="App">
           <AppBar
+            onTitleTouchTap={() => history.push("/home")}
             title="Scorekort"
-            iconElementLeft={this.state.loggedIn
-            ? <Link to="/profile"> <Avatar className="App-logo" src={this.state.user.photoURL} /> </Link>
+            iconElementLeft={this.props.loggedIn
+            ? <Link to="/profile"> <Avatar className="App-logo" src={this.props.user.photoURL} /> </Link>
             : <img src={logo} className="App-logo" alt="logo" /> }
-            iconElementRight={this.state.loggedIn
+            iconElementRight={this.props.loggedIn
             ? <FlatButton
                 onClick={this.handleSignOut}
                 label="Logga ut"
@@ -115,9 +112,20 @@ class App extends Component {
           <div className="content">
             <Route path="/home" component={() => <Home courses={this.props.courses} />} />
             <Route path="/profile" component={() => <Profile />} />
-            <Route path="/courses/:course" component={(props) => <Course {...props} {...this.props} />} />
+            <Route exact path="/courses/:course" component={(props) => <Course {...props} {...this.props} />} />
+            <Route path="/courses/:course/rounds/new" component={(props) => <CreateRound {...props} {...this.props} />} />
             <Route exact path="/" render={() => <Redirect to="/home" />} />
           </div>
+          <Paper className="bottom-nav" zDepth={1}>
+            <BottomNavigation>
+              <BottomNavigationItem 
+                onClick={() => history.push("/home")} 
+                icon={<FontIcon className="fa fa-home" />} />
+              <BottomNavigationItem 
+                onClick={() => history.goBack()}
+                icon={<FontIcon className="fa fa-arrow-left" />} />
+            </BottomNavigation>
+          </Paper>
         </div>
       </Router>
     );
@@ -126,7 +134,9 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    courses: state.courses.courses
+    courses: state.courses.courses,
+    loggedIn: state.courses.loggedIn,
+    user: state.courses.user
   }
 }
 
