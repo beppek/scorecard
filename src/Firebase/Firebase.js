@@ -7,6 +7,22 @@ class Firebase {
     firebase.initializeApp(config);
   }
 
+  authState(callback) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        callback({
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          refreshToken: user.refreshToken,
+          uid: user.uid
+        });
+      } else {
+        callback(null);
+      }
+    });
+  }
+
   signInWithGoogle() {
     localStorage.setItem("loggingIn", true);
     const provider = new firebase
@@ -49,6 +65,13 @@ class Firebase {
     });
   }
 
+  get(ref, callback) {
+    const db = firebase.database().ref(ref);
+    db.on("value", (snap) => {
+      callback(snap.val());
+    });
+  }
+
   getAllCourses(callback) {
       const db = firebase.database().ref("courses/");
       db.on("value", (snap) => {
@@ -61,6 +84,22 @@ class Firebase {
         })
         callback(data);
       });
+  }
+
+  getCourseInfo(ref, callback) {
+    const db = firebase.database().ref(`courses/${ref}/`);
+    db.on("value", (snap) => {
+      callback(snap.val());
+    });
+  }
+
+  saveRound(course, data, callback) {
+    const db = firebase.database().ref(`courses/${course}/rounds/`);
+    const newRef = db.push();
+    newRef.set({
+      data
+    });
+    callback(newRef);
   }
 
 }
