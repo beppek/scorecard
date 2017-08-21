@@ -1,0 +1,1 @@
+export default RECEIVE_COURSES = "RECEIVE_COURSES";

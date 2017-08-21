@@ -1,22 +1,39 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import update from 'immutability-helper';
+import {
+  Router,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+import history from './history';
+
 import logo from './img/discgolf.png';
 import Firebase from './Firebase/Firebase';
-
 import './App.css';
 
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
+import MenuItem from 'material-ui/MenuItem';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+
+import Home from "./Components/Home/Home";
+import Profile from './Components/Profile/Profile';
+import Course from './Components/Course/Course';
+import CreateRound from './Components/Round/CreateRound';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      loggedIn: false,
-      avatarUrl: null
+      open: false
     };
   }
 
@@ -27,77 +44,100 @@ class App extends Component {
         .getRedirectResult()
         .then((result) => {
           localStorage.removeItem("loggingIn");
-          // firebase.handleLoggedIn(result.user);
           localStorage.setItem("token", result.credential.accessToken);
           localStorage.setItem("username", result.user.displayName);
-          this.setState({loggedIn: true, username: result.user.displayName, avatarUrl: result.user.photoURL});
         })
         .catch((error) => {
-          // this.setState({loading: false});
           console.log(error);
         });
-    } else {
-      // this.setState({loading: false});
     }
   }
 
-  handleNameChange = (e, name) => {
-    console.log(name);
-    this.setState({name});
-  }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    console.log(`Saving course: ${this.state.name}`);
-  }
-
   handleSignOut = () => {
-    this.setState({
-      loggedIn: false,
-      name: '',
-      avatarUrl: null
-    });
     Firebase.signout();
   }
 
+  openLoginMenu = (e) => {
+    e.preventDefault();
+
+    this.setState({
+      open: true,
+      anchorEl: e.currentTarget,
+    });
+  };
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          {this.state.loggedIn
-            ? <Avatar className="App-logo" src={this.state.avatarUrl}/>
-            : <img src={logo} className="App-logo" alt="logo"/>
-}
-          <h2>Scorekort {this.state.loggedIn
-              ? ` för ${this.state.username}`
-              : ""}</h2>
+      <Router history={history}>
+        <div className="App">
+          <AppBar
+            onTitleTouchTap={() => history.push("/home")}
+            title="Scorekort"
+            iconElementLeft={this.props.loggedIn
+            ? <Link to="/profile"> <Avatar className="App-logo" src={this.props.user.photoURL} /> </Link>
+            : <img src={logo} className="App-logo" alt="logo" /> }
+            iconElementRight={this.props.loggedIn
+            ? <FlatButton
+                onClick={this.handleSignOut}
+                label="Logga ut"
+                secondary={true}
+                icon={< FontIcon className = "fa fa-sign-out" />}/>
+            : <FlatButton
+                  onClick={this.openLoginMenu}
+                  label="Logga in"
+                  secondary={true}
+                  icon={< FontIcon className = "fa fa-sign-in" />}/>
+  }
+          />
+          <Popover
+            open={this.state.open}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+          >
+            <Menu>
+              <MenuItem leftIcon={<FontIcon className="fa fa-google" />} primaryText="Google" onClick={Firebase.signInWithGoogle} />
+              <MenuItem leftIcon={<FontIcon className="fa fa-facebook" />} primaryText="Facebook" />
+              <MenuItem leftIcon={<FontIcon className="fa fa-twitter" />} primaryText="Twitter" />
+              <MenuItem leftIcon={<FontIcon className="fa fa-instagram" />} primaryText="Instagram" />
+            </Menu>
+          </Popover>
+          <div className="content">
+            <Route path="/home" component={() => <Home courses={this.props.courses} />} />
+            <Route path="/profile" component={() => <Profile />} />
+            <Route exact path="/courses/:course" component={(props) => <Course {...props} {...this.props} />} />
+            <Route path="/courses/:course/rounds/new" component={(props) => <CreateRound {...props} {...this.props} />} />
+            <Route exact path="/" render={() => <Redirect to="/home" />} />
+          </div>
+          <Paper className="bottom-nav" zDepth={1}>
+            <BottomNavigation>
+              <BottomNavigationItem 
+                onClick={() => history.push("/home")} 
+                icon={<FontIcon className="fa fa-home" />} />
+              <BottomNavigationItem 
+                onClick={() => history.goBack()}
+                icon={<FontIcon className="fa fa-arrow-left" />} />
+            </BottomNavigation>
+          </Paper>
         </div>
-        {this.state.loggedIn ? 
-          <RaisedButton
-            onClick={this.handleSignOut}
-            label="Logga ut"
-            secondary={true}
-            icon={<FontIcon className="fa fa-sign-out"/>}
-          />
-        : 
-          <RaisedButton
-            onClick={Firebase.signInWithGoogle}
-            label="Logga in med Google"
-            secondary={true}
-            icon={< FontIcon className = "fa fa-google" />}
-          />
-        
-        }
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <TextField
-            type="text"
-            floatingLabelText="Banans namn"
-            name="name"
-            onChange={(e, value) => this.handleNameChange(e, value)}/>
-        </form>
-      </div>
+      </Router>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    courses: state.courses.courses,
+    loggedIn: state.courses.loggedIn,
+    user: state.courses.user
+  }
+}
+
+export default connect(mapStateToProps)(App);
