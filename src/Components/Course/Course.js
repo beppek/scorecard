@@ -41,9 +41,9 @@ class Course extends Component {
         const rounds = this.props.rounds || [];
         rounds.forEach(round => {
             if (round.open) {
-                <ListItem 
+                roundListItems.push(<ListItem 
                     primaryText={round.createdBy}
-                    leftAvatar={<Avatar src={round.avatar} />} />
+                    leftAvatar={<Avatar src={round.avatar} />} />);
             }
         });
 
@@ -55,6 +55,7 @@ class Course extends Component {
                         label="Klubbinfo">
                         <div className="padded-content" >
                             <img 
+                                alt={this.props.course.title}
                                 style={{maxWidth: 150}} 
                                 src={this.props.course.logo} />
                             <h4>{this.props.course.title}</h4>
