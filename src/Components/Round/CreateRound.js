@@ -39,9 +39,11 @@ class CreateRound extends Component {
         e.preventDefault();
         let {publicStatus, saveStats} = this.state;
         let {user, course} = this.props;
+        let date = new Date();
         let data = {
             user,
-            publicStatus
+            publicStatus,
+            timeCreated: date.getTime()
         }
         this.props.createRound(course, data, saveStats);
     }

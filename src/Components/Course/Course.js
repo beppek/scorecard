@@ -14,6 +14,7 @@ import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Subheader from 'material-ui/Subheader';
 import RaisedButton from 'material-ui/RaisedButton';
+import moment from 'moment';
 import * as coursesActions from '../../Redux/actions/coursesActions';
 import history from '../../history';
 
@@ -40,11 +41,13 @@ class Course extends Component {
         let roundListItems = [];
         const rounds = this.props.rounds || [];
         rounds.forEach(round => {
-            // if (round.open) {
+            if (round.value.data.publicStatus) {
+                let timeCreated = moment(round.value.data.timeCreated).format("YYYY-MM-DD HH:mm");
                 roundListItems.push(<ListItem
-                    primaryText={round.createdBy}
-                    leftAvatar={<Avatar src={round.avatar} />} />);
-            // }
+                    key={round.key}
+                    primaryText={`${round.value.data.user.displayName} ${timeCreated}`}
+                    leftAvatar={<Avatar src={round.value.data.user.photoURL} />} />);
+            }
         });
 
         return (
@@ -118,7 +121,7 @@ class Course extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         getCourseInfo: (key) => coursesActions.getCourseInfo(dispatch, key),
-        getRounds: (course) => coursesActions.getFromDB(dispatch, `courses/${course}/rounds/`)
+        getRounds: (course) => coursesActions.getRounds(dispatch, `courses/${course}/rounds/`)
     }
 }
 

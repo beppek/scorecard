@@ -36,6 +36,15 @@ export function getFromDB(dispatch, ref) {
     });
 }
 
+export function getRounds(dispatch, ref) {
+    return Firebase.getRounds(ref, (data) => {
+        dispatch({
+            type: "RECEIVE_ROUNDS",
+            data
+        });
+    });
+}
+
 export function authState(dispatch) {
     return Firebase.authState((user) => {
         dispatch({

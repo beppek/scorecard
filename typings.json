@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
-    "firebase": "registry:dt/firebase#2.4.1+20160510002910"
+    "firebase": "registry:dt/firebase#2.4.1+20160510002910",
+    "moment": "registry:dt/moment#2.11.1+20161010105546"
   }
 }

@@ -2,7 +2,8 @@ const initialState = {
     courses: [],
     courseInfo: {},
     createdRound: null,
-    user: null
+    user: null,
+    rounds: []
 };
 
 export default function reducer(state=initialState, action) {
@@ -27,6 +28,12 @@ export default function reducer(state=initialState, action) {
                 ...state,
                 user: action.user,
                 loggedIn: action.user ? true : false
+            }
+
+        case "RECEIVE_ROUNDS":
+            return {
+                ...state,
+                rounds: action.data
             }
 
         default:

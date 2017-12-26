@@ -72,6 +72,20 @@ class Firebase {
     });
   }
 
+  getRounds(ref, callback) {
+    const db = firebase.database().ref(ref);
+      db.on("value", (snap) => {
+        let data = [];
+        snap.forEach(child => {
+          data.push({
+            key: child.key,
+            value: child.val()
+          });
+        })
+        callback(data);
+      });
+  }
+
   getAllCourses(callback) {
       const db = firebase.database().ref("courses/");
       db.on("value", (snap) => {
