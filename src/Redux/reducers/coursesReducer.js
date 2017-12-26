@@ -1,6 +1,8 @@
 const initialState = {
     courses: [],
-    courseInfo: {}
+    courseInfo: {},
+    createdRound: null,
+    user: null
 };
 
 export default function reducer(state=initialState, action) {
@@ -15,7 +17,7 @@ export default function reducer(state=initialState, action) {
                 ...state,
                 courseInfo: action.data
             }
-        case "SAVE_ROUND":
+        case "CREATE_ROUND":
             return {
                 ...state,
                 createdRound: action.data
@@ -24,9 +26,9 @@ export default function reducer(state=initialState, action) {
             return {
                 ...state,
                 user: action.user,
-                loggedIn: action.user ? true : false 
+                loggedIn: action.user ? true : false
             }
-    
+
         default:
             return state;
     }

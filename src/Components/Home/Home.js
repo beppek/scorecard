@@ -62,6 +62,10 @@ class Home extends Component {
         this.handleNameChange("");
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     render() {
         let listItems = [];
         const results = this.state.results.length > 0
@@ -106,10 +110,9 @@ class Home extends Component {
                     margin: "0 auto"
                 }}
                     zDepth={1}>
-                    {this.state.results.length > 0 && <List>
+                    <List>
                         {listItems}
                     </List>
-}
                 </Paper>
             </div>
         );
