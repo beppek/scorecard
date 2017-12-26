@@ -93,13 +93,13 @@ class Firebase {
     });
   }
 
-  saveRound(course, data, callback) {
-    const db = firebase.database().ref(`courses/${course}/rounds/`);
-    const newRef = db.push();
-    newRef.set({
-      data
-    });
-    callback(newRef);
+  createRound(course, data, saveStats, callback) {
+      const db = firebase.database().ref(`courses/${course.key}/rounds/`);
+      const newRef = db.push();
+      newRef.set({
+        data
+      });
+      callback(newRef);
   }
 
 }
