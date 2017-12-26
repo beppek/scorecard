@@ -18,10 +18,10 @@ export function getCourseInfo(dispatch, course) {
     });
 }
 
-export function saveRound(dispatch, course, data) {
-    return Firebase.saveRound(course, data, (ref) => {
+export function createRound(dispatch, course, data, saveStats) {
+    return Firebase.createRound(course, data, saveStats, (ref) => {
         dispatch({
-            type: "SAVE_ROUND",
+            type: "CREATE_ROUND",
             data: ref
         });
     });
