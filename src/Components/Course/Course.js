@@ -40,37 +40,37 @@ class Course extends Component {
         let roundListItems = [];
         const rounds = this.props.rounds || [];
         rounds.forEach(round => {
-            if (round.open) {
-                roundListItems.push(<ListItem 
+            // if (round.open) {
+                roundListItems.push(<ListItem
                     primaryText={round.createdBy}
                     leftAvatar={<Avatar src={round.avatar} />} />);
-            }
+            // }
         });
 
         return (
             <div>
                 <Tabs>
-                    <Tab 
-                        icon={<FontIcon className="fa fa-info-circle" />} 
+                    <Tab
+                        icon={<FontIcon className="fa fa-info-circle" />}
                         label="Klubbinfo">
                         <div className="padded-content" >
-                            <img 
+                            <img
                                 alt={this.props.course.title}
-                                style={{maxWidth: 150}} 
+                                style={{maxWidth: 150}}
                                 src={this.props.course.logo} />
                             <h4>{this.props.course.title}</h4>
                             <List>
-                                <ListItem 
+                                <ListItem
                                     primaryText={
                                         <a href={this.props.course.url} >
                                             <FontIcon className="fa fa-globe" /> hemsida
                                         </a>}/>
-                                <ListItem 
+                                <ListItem
                                     primaryText={
                                         <a href={this.props.course.facebook} >
                                             <FontIcon className="fa fa-facebook" /> facebook
                                         </a>}/>
-                                <ListItem 
+                                <ListItem
                                     primaryText={
                                         <a href={this.props.course.instagram} >
                                             <FontIcon className="fa fa-instagram" /> instagram
@@ -78,23 +78,23 @@ class Course extends Component {
                             </List>
                         </div>
                     </Tab>
-                    <Tab 
-                        icon={<FontIcon className="fa fa-play" />} 
+                    <Tab
+                        icon={<FontIcon className="fa fa-play" />}
                         label="Spela">
                         <div className="padded-content">
                             <List>
-                                <RaisedButton 
-                                    primary={true} 
-                                    icon={<FontIcon className="fa fa-plus" />} 
+                                <RaisedButton
+                                    primary={true}
+                                    icon={<FontIcon className="fa fa-plus" />}
                                     label="Ny runda"
-                                    onClick={() => history.push(`/courses/${this.props.course.key}/rounds/new`)} />
+                                    onClick={() => history.push(`/courses/${this.props.course.key}/rounds`)} />
                                 <Subheader>Öppna rundor </Subheader>
                                 {roundListItems}
                             </List>
                         </div>
                     </Tab>
-                    <Tab 
-                        icon={<FontIcon className="fa fa-trophy" />} 
+                    <Tab
+                        icon={<FontIcon className="fa fa-trophy" />}
                         label="Baninfo">
                         <Table selectable={false}>
                             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
