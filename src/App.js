@@ -27,6 +27,7 @@ import Home from "./Components/Home/Home";
 import Profile from './Components/Profile/Profile';
 import Course from './Components/Course/Course';
 import CreateRound from './Components/Round/CreateRound';
+import Round from './Components/Round/Round';
 
 class App extends Component {
 
@@ -113,15 +114,16 @@ class App extends Component {
             <Route path="/home" component={() => <Home courses={this.props.courses} />} />
             <Route path="/profile" component={() => <Profile />} />
             <Route exact path="/courses/:course" component={(props) => <Course {...props} {...this.props} />} />
-            <Route path="/courses/:course/rounds/new" component={(props) => <CreateRound {...props} {...this.props} />} />
+            <Route exact path="/courses/:course/rounds" component={(props) => <CreateRound {...props} {...this.props} />} />
+            <Route exact path="/courses/:course/rounds/:roundId" component={(props) => <Round {...props} {...this.props} />} />
             <Route exact path="/" render={() => <Redirect to="/home" />} />
           </div>
           <Paper className="bottom-nav" zDepth={1}>
             <BottomNavigation>
-              <BottomNavigationItem 
-                onClick={() => history.push("/home")} 
+              <BottomNavigationItem
+                onClick={() => history.push("/home")}
                 icon={<FontIcon className="fa fa-home" />} />
-              <BottomNavigationItem 
+              <BottomNavigationItem
                 onClick={() => history.goBack()}
                 icon={<FontIcon className="fa fa-arrow-left" />} />
             </BottomNavigation>
