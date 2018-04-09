@@ -118,7 +118,20 @@ class Firebase {
       data
     });
     callback(newRef);
-
+  }
+  
+  getScores(userId, callback) {
+    const db = firebase.database().ref(`users/${userId}/rounds`);
+    db.on('value', snap => {
+      let data = [];
+      snap.forEach(child => {
+        data.push({
+          key: child.key,
+          value: child.val()
+        });
+      });
+      callback(data);
+    });
   }
 }
 

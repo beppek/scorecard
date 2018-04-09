@@ -39,17 +39,17 @@ class Round extends Component {
     this.props.getCourseInfo(this.courseKey);
     this.props.getRound(this.courseKey, this.roundKey);
   }
-
+  
   handleInputChange = (e, score, hole) => {
     console.log(hole);
     console.log(score);
-    const {user, updateRound} = this.props;
+    const {user, updateRound, round} = this.props;
     let {scorecard} = this.state;
     scorecard[hole] = score;
     this.setState(scorecard);
-    updateRound(user, this.roundKey, {course: this.courseKey, scorecard});
+    updateRound(user, this.roundKey, {course: this.courseKey, scorecard, timeCreated: round.timeCreated});
   }
-
+  
   render() {
     let tableRows = [];
     const baskets = this.props.course.holes || [];
