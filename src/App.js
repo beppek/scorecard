@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import history from './history';
 
-import logo from './img/discgolf.png';
+import logo from './golfer.svg';
 import Firebase from './Firebase/Firebase';
 import './App.css';
 

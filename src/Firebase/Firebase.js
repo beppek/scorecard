@@ -1,14 +1,13 @@
-import firebase from "firebase";
-import config from "./config";
+import firebase from 'firebase';
+import config from './config';
 
 class Firebase {
-
   init() {
     firebase.initializeApp(config);
   }
 
   authState(callback) {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
         callback({
           displayName: user.displayName,
@@ -24,14 +23,10 @@ class Firebase {
   }
 
   signInWithGoogle() {
-    localStorage.setItem("loggingIn", true);
-    const provider = new firebase
-      .auth
-      .GoogleAuthProvider();
+    localStorage.setItem('loggingIn', true);
+    const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-    firebase
-      .auth()
-      .signInWithRedirect(provider);
+    firebase.auth().signInWithRedirect(provider);
   }
 
   signout() {
@@ -42,7 +37,7 @@ class Firebase {
         .then(() => {
           resolve();
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error);
         });
     });
@@ -53,13 +48,13 @@ class Firebase {
       firebase
         .auth()
         .getRedirectResult()
-        .then((result) => {
+        .then(result => {
           if (!result.user) {
-            reject("no user");
+            reject('no user');
           }
           resolve(result);
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error);
         });
     });
@@ -67,55 +62,64 @@ class Firebase {
 
   get(ref, callback) {
     const db = firebase.database().ref(ref);
-    db.on("value", (snap) => {
+    db.on('value', snap => {
       callback(snap.val());
     });
   }
 
   getRounds(ref, callback) {
     const db = firebase.database().ref(ref);
-      db.on("value", (snap) => {
-        let data = [];
-        snap.forEach(child => {
-          data.push({
-            key: child.key,
-            value: child.val()
-          });
-        })
-        callback(data);
+    db.on('value', snap => {
+      let data = [];
+      snap.forEach(child => {
+        data.push({
+          key: child.key,
+          value: child.val()
+        });
       });
+      callback(data);
+    });
   }
 
   getAllCourses(callback) {
-      const db = firebase.database().ref("courses/");
-      db.on("value", (snap) => {
-        let data = [];
-        snap.forEach(child => {
-          data.push({
-            key: child.key,
-            value: child.val()
-          });
-        })
-        callback(data);
+    const db = firebase.database().ref('courses/');
+    db.on('value', snap => {
+      let data = [];
+      snap.forEach(child => {
+        data.push({
+          key: child.key,
+          value: child.val()
+        });
       });
+      callback(data);
+    });
   }
 
   getCourseInfo(ref, callback) {
     const db = firebase.database().ref(`courses/${ref}/`);
-    db.on("value", (snap) => {
+    db.on('value', snap => {
       callback(snap.val());
     });
   }
 
   createRound(course, data, saveStats, callback) {
-      const db = firebase.database().ref(`courses/${course.key}/rounds/`);
-      const newRef = db.push();
-      newRef.set({
-        data
-      });
-      callback(newRef);
+    const db = firebase.database().ref(`courses/${course.key}/rounds/`);
+    const newRef = db.push();
+    newRef.set({
+      data
+    });
+    callback(newRef);
   }
 
+  updateRound(user, roundKey, data, callback) {
+    const db = firebase.database().ref(`users/${user.uid}/rounds`);
+    const newRef = db.child(roundKey);
+    newRef.set({
+      data
+    });
+    callback(newRef);
+
+  }
 }
 
 export default new Firebase();

@@ -41,7 +41,7 @@ class CreateRound extends Component {
         let {user, course} = this.props;
         let date = new Date();
         let data = {
-            user,
+            createdBy: user,
             publicStatus,
             timeCreated: date.getTime()
         }
