@@ -111,8 +111,8 @@ class Course extends Component {
                     history.push(`/courses/${this.props.course.key}/rounds`)
                   }
                 />
-                <Subheader>Öppna rundor </Subheader>
-                {roundListItems}
+                {/* <Subheader>Öppna rundor </Subheader>
+                {roundListItems} */}
               </List>
             </div>
           </Tab>

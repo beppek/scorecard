@@ -87,6 +87,8 @@ class Home extends Component {
         });
         return (
             <div className="home">
+                <h3>This is early alpha testing release! Beware! Here be dragons!</h3>
+                <h4>If you are not a tester - do not use this application! We cannot promise it treats you well!</h4>
                 <form onSubmit={(e) => this.handleSubmit(e)}>
                     <TextField
                         value={this.state.value

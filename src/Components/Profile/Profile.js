@@ -4,6 +4,7 @@ import { List, ListItem } from "material-ui/List";
 import Subheader from "material-ui/Subheader";
 import moment from 'moment';
 import * as userActions from "../../Redux/actions/userActions";
+import history from '../../history';
 
 class Profile extends Component {
   componentDidMount() {
@@ -24,7 +25,17 @@ class Profile extends Component {
           'YYYY-MM-DD HH:mm'
         );
         console.log(score);
-        scoreList.push(<ListItem key={score.key} primaryText={timeCreated} />);
+        scoreList.push(
+          <ListItem 
+            key={score.key} 
+            onClick={() =>
+              history.push(
+                `/profile/scores/${score.key}`
+              )
+            }
+            primaryText={timeCreated} 
+          />
+        );
       });
     }
     return (

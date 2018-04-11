@@ -23,6 +23,7 @@ import {
 
 import Home from "./Components/Home/Home";
 import Profile from "./Components/Profile/Profile";
+import RoundScore from "./Components/Profile/RoundScore";
 import Course from "./Components/Course/Course";
 import CreateRound from "./Components/Round/CreateRound";
 import Round from "./Components/Round/Round";
@@ -139,7 +140,12 @@ class App extends Component {
               path="/home"
               component={() => <Home courses={this.props.courses} />}
             />
-            <Route path="/profile" component={() => <Profile />} />
+            <Route exact path="/profile" component={() => <Profile />} />
+            <Route
+              exact
+              path="/profile/scores/:roundId"
+              component={props => <RoundScore {...props} {...this.props} />}
+            />
             <Route
               exact
               path="/courses/:course"
