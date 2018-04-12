@@ -1,5 +1,5 @@
-import firebase from 'firebase';
-import config from './config';
+import firebase from "firebase";
+import config from "./config";
 
 class Firebase {
   init() {
@@ -23,9 +23,9 @@ class Firebase {
   }
 
   signInWithGoogle() {
-    localStorage.setItem('loggingIn', true);
+    localStorage.setItem("loggingIn", true);
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+    provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
     firebase.auth().signInWithRedirect(provider);
   }
 
@@ -50,7 +50,7 @@ class Firebase {
         .getRedirectResult()
         .then(result => {
           if (!result.user) {
-            reject('no user');
+            reject("no user");
           }
           resolve(result);
         })
@@ -62,14 +62,14 @@ class Firebase {
 
   get(ref, callback) {
     const db = firebase.database().ref(ref);
-    db.on('value', snap => {
+    db.on("value", snap => {
       callback(snap.val());
     });
   }
 
   getRounds(ref, callback) {
     const db = firebase.database().ref(ref);
-    db.on('value', snap => {
+    db.on("value", snap => {
       let data = [];
       snap.forEach(child => {
         data.push({
@@ -82,8 +82,8 @@ class Firebase {
   }
 
   getAllCourses(callback) {
-    const db = firebase.database().ref('courses/');
-    db.on('value', snap => {
+    const db = firebase.database().ref("courses/");
+    db.on("value", snap => {
       let data = [];
       snap.forEach(child => {
         data.push({
@@ -97,7 +97,7 @@ class Firebase {
 
   getCourseInfo(ref, callback) {
     const db = firebase.database().ref(`courses/${ref}/`);
-    db.on('value', snap => {
+    db.on("value", snap => {
       callback(snap.val());
     });
   }
@@ -119,10 +119,10 @@ class Firebase {
     });
     callback(newRef);
   }
-  
+
   getScores(userId, callback) {
     const db = firebase.database().ref(`users/${userId}/rounds`);
-    db.on('value', snap => {
+    db.on("value", snap => {
       let data = [];
       snap.forEach(child => {
         data.push({

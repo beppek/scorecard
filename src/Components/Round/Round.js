@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as coursesActions from '../../Redux/actions/coursesActions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as coursesActions from "../../Redux/actions/coursesActions";
 import {
   Table,
   TableBody,
@@ -8,12 +8,12 @@ import {
   TableHeaderColumn,
   TableRow,
   TableRowColumn
-} from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+} from "material-ui/Table";
+import TextField from "material-ui/TextField";
+import FontIcon from "material-ui/FontIcon";
+import RaisedButton from "material-ui/RaisedButton";
 
 class Round extends Component {
-
   constructor(props) {
     super(props);
     const baskets = this.props.course.holes || [];
@@ -23,15 +23,15 @@ class Round extends Component {
         scorecard[basket.number] = 0;
       });
       this.state = {
-        scorecard
-      }
+        scorecard,
+        roundScore: 0
+      };
     } else {
       this.state = {
         scorecard: {}
-      }
+      };
     }
   }
-
 
   componentDidMount() {
     this.roundKey = this.props.match.params.roundId;
@@ -39,33 +39,62 @@ class Round extends Component {
     this.props.getCourseInfo(this.courseKey);
     this.props.getRound(this.courseKey, this.roundKey);
   }
-  
+
   handleInputChange = (e, score, hole) => {
-    console.log(hole);
-    console.log(score);
-    const {user, updateRound, round} = this.props;
-    let {scorecard} = this.state;
+    const { user, updateRound, round } = this.props;
+    let { scorecard, roundScore } = this.state;
     scorecard[hole] = score;
-    this.setState(scorecard);
-    updateRound(user, this.roundKey, {course: this.courseKey, scorecard, timeCreated: round.timeCreated});
-  }
-  
+    this.setState({ scorecard });
+    updateRound(user, this.roundKey, {
+      course: this.courseKey,
+      scorecard,
+      roundScore,
+      timeCreated: round.data.timeCreated
+    });
+  };
+
+  handleSaveRound = () => {
+    const baskets = this.props.course.holes || [];
+    let { roundScore, scorecard } = this.state;
+    const { user, updateRound, round } = this.props;
+    baskets.forEach((basket, i) => {
+      const { par } = basket;
+      roundScore += parseInt(scorecard[i]) - parseInt(par);
+    });
+    this.setState({ roundScore });
+    updateRound(user, this.roundKey, {
+      course: this.courseKey,
+      scorecard,
+      roundScore,
+      timeCreated: round.data.timeCreated
+    });
+  };
+
   render() {
     let tableRows = [];
     const baskets = this.props.course.holes || [];
-    baskets.forEach((basket) => {
+    baskets.forEach(basket => {
       tableRows.push(
         <TableRow key={basket.number}>
           <TableRowColumn>{basket.number}</TableRowColumn>
           <TableRowColumn>{basket.length}m</TableRowColumn>
           <TableRowColumn>{basket.par}</TableRowColumn>
-          <TableRowColumn><TextField onChange={(e, val) => this.handleInputChange(e, val, basket.number)} hintText='Score' />{this.state.scorecard[basket.number] ? this.state.scorecard[basket.number] : ''}</TableRowColumn>
+          <TableRowColumn>
+            <TextField
+              onChange={(e, val) =>
+                this.handleInputChange(e, val, basket.number)
+              }
+              hintText="Score"
+            />
+            {this.state.scorecard[basket.number]
+              ? this.state.scorecard[basket.number]
+              : ""}
+          </TableRowColumn>
         </TableRow>
       );
     });
     return (
       <div>
-        Here's round:
         <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
@@ -79,6 +108,13 @@ class Round extends Component {
             {tableRows}
           </TableBody>
         </Table>
+        <RaisedButton
+          onClick={this.handleSaveRound}
+          label="Spara"
+          labelPosition="after"
+          primary={true}
+          icon={<FontIcon className="far fa-save" />}
+        />
       </div>
     );
   }
@@ -87,8 +123,10 @@ class Round extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     getCourseInfo: key => coursesActions.getCourseInfo(dispatch, key),
-    getRound: (courseKey, roundKey) => coursesActions.getRound(dispatch, courseKey, roundKey),
-    updateRound: (user, roundKey, data) => coursesActions.updateRound(dispatch, user, roundKey, data)
+    getRound: (courseKey, roundKey) =>
+      coursesActions.getRound(dispatch, courseKey, roundKey),
+    updateRound: (user, roundKey, data) =>
+      coursesActions.updateRound(dispatch, user, roundKey, data)
   };
 };
 

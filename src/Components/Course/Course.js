@@ -64,6 +64,36 @@ class Course extends Component {
     return (
       <div>
         <Tabs>
+          <Tab icon={<FontIcon className="fa fa-play" />} label="Spela">
+            <div className="padded-content">
+              <List>
+                <RaisedButton
+                  primary={true}
+                  icon={<FontIcon className="fa fa-plus" />}
+                  label="Ny runda"
+                  onClick={() =>
+                    history.push(`/courses/${this.props.course.key}/rounds`)
+                  }
+                />
+                {/* <Subheader>Öppna rundor </Subheader>
+                {roundListItems} */}
+              </List>
+            </div>
+          </Tab>
+          <Tab icon={<FontIcon className="fa fa-trophy" />} label="Baninfo">
+            <Table selectable={false}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                  <TableHeaderColumn>Nr</TableHeaderColumn>
+                  <TableHeaderColumn>Längd</TableHeaderColumn>
+                  <TableHeaderColumn>Par</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody stripedRows={true} displayRowCheckbox={false}>
+                {tableRows}
+              </TableBody>
+            </Table>
+          </Tab>
           <Tab
             icon={<FontIcon className="fa fa-info-circle" />}
             label="Klubbinfo"
@@ -99,36 +129,6 @@ class Course extends Component {
                 />
               </List>
             </div>
-          </Tab>
-          <Tab icon={<FontIcon className="fa fa-play" />} label="Spela">
-            <div className="padded-content">
-              <List>
-                <RaisedButton
-                  primary={true}
-                  icon={<FontIcon className="fa fa-plus" />}
-                  label="Ny runda"
-                  onClick={() =>
-                    history.push(`/courses/${this.props.course.key}/rounds`)
-                  }
-                />
-                {/* <Subheader>Öppna rundor </Subheader>
-                {roundListItems} */}
-              </List>
-            </div>
-          </Tab>
-          <Tab icon={<FontIcon className="fa fa-trophy" />} label="Baninfo">
-            <Table selectable={false}>
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                <TableRow>
-                  <TableHeaderColumn>Nr</TableHeaderColumn>
-                  <TableHeaderColumn>Längd</TableHeaderColumn>
-                  <TableHeaderColumn>Par</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody stripedRows={true} displayRowCheckbox={false}>
-                {tableRows}
-              </TableBody>
-            </Table>
           </Tab>
         </Tabs>
       </div>

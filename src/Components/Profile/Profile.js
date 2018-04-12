@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { List, ListItem } from "material-ui/List";
 import Subheader from "material-ui/Subheader";
-import moment from 'moment';
+import moment from "moment";
 import * as userActions from "../../Redux/actions/userActions";
-import history from '../../history';
+import * as coursesActions from "../../Redux/actions/coursesActions";
+import history from "../../history";
 
 class Profile extends Component {
   componentDidMount() {
@@ -14,26 +15,26 @@ class Profile extends Component {
     }
   }
 
+  handleRoundClick = roundInfo => {
+    this.props.getCourseInfo(roundInfo.value.data.course);
+    history.push(`/profile/scores/${roundInfo.key}`);
+  };
+
   render() {
     const { user, scores } = this.props;
-    // console.log(user);
-    console.log(scores);
     let scoreList = [];
     if (scores.length !== 0) {
       scores.forEach(score => {
         const timeCreated = moment(score.value.data.timeCreated).format(
-          'YYYY-MM-DD HH:mm'
+          "YYYY-MM-DD HH:mm"
         );
-        console.log(score);
+        let { roundScore } = score.value.data;
+        roundScore = roundScore > 0 ? `+${roundScore}` : roundScore;
         scoreList.push(
-          <ListItem 
-            key={score.key} 
-            onClick={() =>
-              history.push(
-                `/profile/scores/${score.key}`
-              )
-            }
-            primaryText={timeCreated} 
+          <ListItem
+            key={score.key}
+            onClick={() => this.handleRoundClick(score)}
+            primaryText={`${timeCreated} | Total Score: ${roundScore}`}
           />
         );
       });
@@ -61,6 +62,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    getCourseInfo: key => coursesActions.getCourseInfo(dispatch, key),
     getScores: userId => userActions.getScores(dispatch, userId)
   };
 };

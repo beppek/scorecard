@@ -8,6 +8,7 @@
   "editor.tabSize": 2,
   "files.autoSave": "onFocusChange",
   "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 80,
   "editor.snippetSuggestions": "top",
   "editor.formatOnSave": true
 }
