@@ -63,8 +63,8 @@ class CreateRound extends Component {
         <RaisedButton
           onClick={this.submitNewRound}
           primary={true}
-          label="Lägg till"
-          icon={<FontIcon className="fa fa-plus" />}
+          label="Spela"
+          icon={<FontIcon className="fas fa-play" />}
         />
       </div>
     );

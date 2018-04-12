@@ -1,0 +1,13 @@
+{
+  "workbench.colorCustomizations": {
+    "editor.findMatchHighlightBackground": "#5e1f39",
+    "editor.selectionBackground": "#5e1f39",
+    "editor.selectionHighlightBackground": "#3b1625"
+  },
+
+  "editor.tabSize": 2,
+  "files.autoSave": "onFocusChange",
+  "editor.wordWrap": "on",
+  "editor.snippetSuggestions": "top",
+  "editor.formatOnSave": true
+}

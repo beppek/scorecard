@@ -96,14 +96,14 @@ class App extends Component {
                   onClick={this.handleSignOut}
                   label="Logga ut"
                   secondary={true}
-                  icon={<FontIcon className="fa fa-sign-out" />}
+                  icon={<FontIcon className="fas fa-sign-out-alt" />}
                 />
               ) : (
                 <FlatButton
                   onClick={this.openLoginMenu}
                   label="Logga in"
                   secondary={true}
-                  icon={<FontIcon className="fa fa-sign-in" />}
+                  icon={<FontIcon className="fas fa-sign-in-alt" />}
                 />
               )
             }
@@ -117,20 +117,20 @@ class App extends Component {
           >
             <Menu>
               <MenuItem
-                leftIcon={<FontIcon className="fa fa-google" />}
+                leftIcon={<FontIcon className="fab fa-google" />}
                 primaryText="Google"
                 onClick={Firebase.signInWithGoogle}
               />
               <MenuItem
-                leftIcon={<FontIcon className="fa fa-facebook" />}
+                leftIcon={<FontIcon className="fab fa-facebook" />}
                 primaryText="Facebook"
               />
               <MenuItem
-                leftIcon={<FontIcon className="fa fa-twitter" />}
+                leftIcon={<FontIcon className="fab fa-twitter" />}
                 primaryText="Twitter"
               />
               <MenuItem
-                leftIcon={<FontIcon className="fa fa-instagram" />}
+                leftIcon={<FontIcon className="fab fa-instagram" />}
                 primaryText="Instagram"
               />
             </Menu>

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Tabs, Tab } from 'material-ui/Tabs';
-import FontIcon from 'material-ui/FontIcon';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Tabs, Tab } from "material-ui/Tabs";
+import FontIcon from "material-ui/FontIcon";
 import {
   Table,
   TableBody,
@@ -9,14 +9,14 @@ import {
   TableHeaderColumn,
   TableRow,
   TableRowColumn
-} from 'material-ui/Table';
-import { List, ListItem } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import Subheader from 'material-ui/Subheader';
-import RaisedButton from 'material-ui/RaisedButton';
-import moment from 'moment';
-import * as coursesActions from '../../Redux/actions/coursesActions';
-import history from '../../history';
+} from "material-ui/Table";
+import { List, ListItem } from "material-ui/List";
+import Avatar from "material-ui/Avatar";
+import Subheader from "material-ui/Subheader";
+import RaisedButton from "material-ui/RaisedButton";
+import moment from "moment";
+import * as coursesActions from "../../Redux/actions/coursesActions";
+import history from "../../history";
 
 class Course extends Component {
   componentDidMount() {
@@ -42,7 +42,7 @@ class Course extends Component {
     rounds.forEach(round => {
       if (round.value.data.publicStatus) {
         let timeCreated = moment(round.value.data.timeCreated).format(
-          'YYYY-MM-DD HH:mm'
+          "YYYY-MM-DD HH:mm"
         );
         roundListItems.push(
           <ListItem
@@ -86,14 +86,14 @@ class Course extends Component {
                 <ListItem
                   primaryText={
                     <a href={this.props.course.facebook}>
-                      <FontIcon className="fa fa-facebook" /> facebook
+                      <FontIcon className="fab fa-facebook" /> facebook
                     </a>
                   }
                 />
                 <ListItem
                   primaryText={
                     <a href={this.props.course.instagram}>
-                      <FontIcon className="fa fa-instagram" /> instagram
+                      <FontIcon className="fab fa-instagram" /> instagram
                     </a>
                   }
                 />
